@@ -1,0 +1,36 @@
+{
+  "name": "pdf2md-desktop-ui",
+  "version": "0.2.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "python scripts/design_tokens.py && node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "tokens:check": "python scripts/design_tokens.py --check",
+    "test:ui": "playwright test",
+    "test:a11y": "playwright test --grep accessibility",
+    "test:unit": "python scripts/dev_checks.py unit",
+    "verify:premium": "python scripts/dev_checks.py premium"
+  },
+  "dependencies": {
+    "@codemirror/commands": "6.11.1",
+    "@codemirror/lang-markdown": "6.5.2",
+    "@codemirror/language": "6.13.1",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.15",
+    "dompurify": "3.4.17",
+    "katex": "0.19.0",
+    "lucide": "1.61.0",
+    "markdown-it": "15.0.3",
+    "markdown-it-texmath": "1.0.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1",
+    "@types/katex": "*",
+    "@types/markdown-it": "*",
+    "@types/node": "^25.9.9",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2"
+  }
+}

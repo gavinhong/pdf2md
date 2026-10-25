@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>PDF2MD · PDF 转 Markdown</title>
+  <link rel="stylesheet" href="/app.css">
+  <script>window.__PDF2MD_TOKEN__ = '__SESSION_TOKEN__';</script>
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">p<span>↗</span>m</span><div><strong>PDF2MD</strong><span>文档转换工作台</span></div></div>
+    <div id="startup-activity" class="startup-activity" role="status" aria-live="polite" aria-atomic="true"><span id="activity-spinner" class="spinner" aria-hidden="true"></span><div><span id="activity-label">正在准备工作台…</span><small id="activity-background"></small></div><button id="activity-retry" class="text-button" type="button" onclick="window.pdf2mdAction(event)" hidden>重试</button></div>
+    <div class="header-right"><button id="open-review-result" disabled class="button outline" type="button" onclick="window.pdf2mdAction(event)"><i data-lucide="folder-open"></i>打开已有结果</button><span id="model-status" class="system-status"><span class="status-dot"></span>正在检查离线识别</span><button id="report-button" disabled class="button ghost" type="button" onclick="window.pdf2mdAction(event)"><i data-lucide="file-clock"></i>任务报告</button></div>
+  </header>
+  <main class="workspace">
+    <section class="queue-panel" aria-labelledby="queue-heading">
+      <div class="panel-heading"><div><h1 id="queue-heading">转换队列 <span id="queue-count" class="count">0</span></h1><p>添加文档，选择范围，开始转换。</p></div><button id="add-button" disabled class="button outline" type="button" onclick="window.pdf2mdAction(event)"><i data-lucide="plus"></i>添加 PDF</button></div>
+      <div id="import-feedback" class="inline-alert" role="status" hidden></div>
+      <div id="drop-zone" class="drop-zone">
+        <span class="document-icon" aria-hidden="true"><i data-lucide="file-input"></i></span>
+        <strong>将 PDF 拖到这里</strong><p>或使用上方「添加 PDF」</p><small>每批最多 100 个文件 · 单文件 100 MB</small>
+      </div>
+      <div class="queue-toolbar"><span id="queue-summary">支持文字、扫描件和复杂版面</span><div><button type="button" id="remove-button" class="text-button" disabled onclick="window.pdf2mdAction(event)">移除选中</button><button type="button" id="clear-button" class="text-button" disabled onclick="window.pdf2mdAction(event)">清空</button></div></div>
+      <div class="task-list-scroll"><ul id="task-list" class="task-list" aria-label="PDF 转换任务列表"></ul><div id="queue-empty" class="queue-empty"><span class="line-rule"></span><span>你的文档会出现在这里</span><span class="line-rule"></span></div></div>
+      <details class="settings" open>
+        <summary><span><i data-lucide="sliders-horizontal"></i>转换设置</span><i data-lucide="chevron-down"></i></summary>
+        <form id="settings-form" novalidate>
+          <fieldset id="settings-fields" disabled>
+            <div class="field"><label for="output-dir">输出目录</label><div class="input-with-button"><input id="output-dir" type="text" placeholder="选择 Markdown 保存位置" aria-describedby="settings-error" autocomplete="off"><button id="output-button" class="icon-button" type="button" aria-label="选择输出目录" title="选择输出目录" onclick="window.pdf2mdAction(event)"><i data-lucide="folder-open"></i></button></div></div>
+            <div class="field-row"><div class="field"><label for="page-range">页码范围</label><input id="page-range" type="text" placeholder="全部页面" aria-describedby="page-help settings-error" autocomplete="off"><small id="page-help">例如 1-5,8,10-12</small></div><div class="field"><label for="conversion-mode">识别模式</label><select id="conversion-mode"><option value="auto">自动识别</option><option value="ocr">强制 OCR</option></select></div></div>
+            <div class="field-row"><div class="field"><label for="table-format">表格格式</label><select id="table-format"><option value="auto">自动 · Markdown / HTML</option><option value="html">统一 HTML</option></select></div><div class="field"><label for="formula">公式识别</label><label class="check-label"><input id="formula" type="checkbox" checked>转换为 LaTeX</label></div></div>
+            <div class="check-row"><label class="check-label"><input id="extract-images" type="checkbox" checked>提取正文图片</label><label class="check-label"><input id="remove-headers" type="checkbox" checked>清理页眉页脚</label></div>
+          </fieldset>
+          <p id="settings-error" class="field-error" role="alert" hidden></p>
+        </form>
+      </details>
+      <div class="queue-actions"><div class="batch-status"><span id="batch-label">准备就绪</span><span id="batch-count"></span></div><div class="action-row"><button id="start-button" class="button primary" type="button" disabled onclick="window.pdf2mdAction(event)"><i data-lucide="play"></i><span>开始转换</span></button><button id="cancel-current" class="button outline" type="button" hidden onclick="window.pdf2mdAction(event)">取消当前</button><button id="cancel-all" class="text-button danger" type="button" hidden onclick="window.pdf2mdAction(event)">取消全部</button></div><p class="local-note"><i data-lucide="shield-check"></i>文档保留在本机，转换过程无需联网</p></div>
+    </section>
+    <section class="preview-panel" aria-labelledby="preview-heading">
+      <div class="preview-toolbar"><div class="preview-label"><i data-lucide="book-open-text"></i><h2 id="preview-heading">阅读预览</h2></div><div class="view-switch" role="group" aria-label="预览模式"><button id="render-tab" type="button" aria-pressed="true" onclick="window.pdf2mdAction(event)">渲染</button><button id="source-tab" type="button" aria-pressed="false" onclick="window.pdf2mdAction(event)">源码</button></div><button id="copy-button" class="button ghost" type="button" disabled onclick="window.pdf2mdAction(event)"><i data-lucide="copy"></i>复制 Markdown</button></div>
+      <div id="preview-empty" class="preview-empty"><div class="paper-illustration" aria-hidden="true"><span class="paper-tag">MD</span><span class="paper-line long"></span><span class="paper-line"></span><span class="paper-line short"></span><span class="paper-code"># 清晰的结构<br>阅读，编辑，再使用。</span><span class="paper-line"></span><span class="paper-line long"></span></div><h3>从一份 PDF 开始</h3><p>转换后，在这里查看可阅读的 Markdown。<br>分栏会按顺序展开，表格和公式保留结构。</p><div class="capability-list"><span>扫描识别</span><span>表格还原</span><span>数学公式</span></div></div>
+      <div id="preview-task" class="preview-task" hidden><div class="document-heading"><div><span id="document-meta" class="eyebrow"></span><h3 id="document-title"></h3></div><div class="result-actions"><button id="review-button" class="button outline" type="button" disabled onclick="window.pdf2mdAction(event)">对照核对</button><button id="retry-button" class="button outline" type="button" hidden onclick="window.pdf2mdAction(event)"><i data-lucide="rotate-ccw"></i>重试</button><button id="open-file" class="icon-button" type="button" aria-label="打开 Markdown 文件" title="打开 Markdown 文件" disabled onclick="window.pdf2mdAction(event)"><i data-lucide="external-link"></i></button><button id="open-folder" class="icon-button" type="button" aria-label="打开输出目录" title="打开输出目录" disabled onclick="window.pdf2mdAction(event)"><i data-lucide="folder-open"></i></button></div></div><div id="task-detail" class="task-detail"></div><div id="task-warning" class="warning-panel" hidden></div><div id="preview-loading" class="preview-loading" hidden><span class="spinner"></span><span id="loading-label">正在读取文档</span></div><iframe id="rendered-preview" title="转换后的 Markdown 文档" sandbox="allow-same-origin" referrerpolicy="no-referrer" hidden></iframe><textarea id="source-preview" aria-label="Markdown 源码" readonly style="resize: none" hidden></textarea><button id="preview-retry" class="button outline load-more" type="button" hidden onclick="window.pdf2mdAction(event)">重新加载预览</button><button id="load-more" class="button outline load-more" type="button" hidden onclick="window.pdf2mdAction(event)">继续加载内容</button></div>
+      <footer class="preview-footer"><span id="preview-caption">Markdown · 图片 · 结构化内容</span><span id="document-stat">离线转换</span></footer>
+    </section>
+  </main>
+  <div id="notifications" class="notifications" role="status" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="exit-dialog" aria-labelledby="exit-title" aria-describedby="exit-description"><div class="dialog-body"><h2 id="exit-title">取消转换并退出？</h2><p id="exit-description">当前任务将停止。已经成功导出的文件会保留。</p></div><div class="dialog-actions"><button id="keep-working" class="button outline" type="button" autofocus onclick="window.pdf2mdAction(event)">继续转换</button><button id="confirm-exit" class="button danger-solid" type="button" onclick="window.pdf2mdAction(event)">取消并退出</button></div></dialog>
+</body>
+</html>

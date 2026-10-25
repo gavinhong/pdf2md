@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pdf2md-desktop"
+version = "0.2.1"
+description = "Offline PDF to Markdown desktop converter with OCR, tables and formulas"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "rapid-doc[cpu]==0.9.11; sys_platform != 'darwin'",
+  "rapid-doc[cpu] @ https://github.com/RapidAI/RapidDoc/archive/0c446b6f074068e88331ffee575187e17cb4ac6d.zip ; sys_platform == 'darwin'",
+  "onnxruntime==1.23.2",
+  "pywebview==6.2.1",
+  "markdownify>=1.2,<2",
+  "platformdirs>=4,<5",
+  "filelock>=3,<4",
+  "psutil>=7,<8",
+  "jdeskew==0.4.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff", "pyinstaller==6.22.3"]
+
+[project.scripts]
+pdf2md = "pdf2md.entry:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pdf2md = ["web/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["integration: real local models and PDF inference"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]

@@ -1,0 +1,19 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": ["frontend"],
+  "locale": "zh-CN",
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": ["Table Selection", "Select/Listbox", "Form", "Scrollbar", "Toast", "CRUD"],
+  "ownership": { "Select/Listbox": "native" },
+  "requiredCommands": ["unit", "e2e", "accessibility", "premium"],
+  "commands": {
+    "unit": "npm run test:unit",
+    "e2e": "npm run test:ui",
+    "accessibility": "npm run test:a11y",
+    "premium": "npm run verify:premium"
+  },
+  "evidence": {
+    "crudFullFlow": "tests/ui.spec.ts",
+    "failurePaths": "tests/test_service.py"
+  }
+}
